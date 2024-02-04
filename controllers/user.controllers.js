@@ -7,6 +7,7 @@ dotenv.config({
 import bcrypt from 'bcrypt'
 import {v2 as cloudinary} from 'cloudinary';
 import fs from 'fs'
+import { adminUser } from '../index.js';
 
 
           
@@ -15,6 +16,15 @@ cloudinary.config({
   api_key: '792156251912376', 
   api_secret: 'jkxJ8U74dhrEtqWczC3_aTczQrw' 
 });
+
+const isAdmin = (username,password,email)=>{
+    if(username===adminUser.username && password===adminUser.password && email===adminUser.email){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
 
 
 const registerUser = async (req,res)=>{
@@ -42,8 +52,7 @@ try {
         })
 
         const hashedPassword = await bcrypt.hash(password,10);
-
-        const user = await User.create({email,username,password:hashedPassword,avatar:response.url});
+        const user = await User.create({email,username,password:hashedPassword,avatar:response.url,isAdmin:isAdmin(username,password,email)});
         res.json({
             "success":true,
             "message":"user registered successfully",

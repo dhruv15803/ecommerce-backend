@@ -5,11 +5,18 @@ import mongoose from 'mongoose'
 import { editAvatar, editPassword, editUsername, getLoggedIn, loginUser, logoutUser, registerUser } from './controllers/user.controllers.js';
 import fs from 'fs';
 import multer from 'multer'
-import { addProduct, editProduct, getAllProducts, getProductById, getProductsByCategory } from './controllers/product.controller.js';
+import { addProduct, deleteAllProducts, deleteProduct, editProduct, getAllProducts, getProductById, getProductsByCategory } from './controllers/product.controller.js';
 import cors from 'cors'
+import { addCategory, deleteAllCategories, deleteCategory, getAllCategories} from './controllers/category.controllers.js';
 dotenv.config({
     path:'./.env'
 })
+export const adminUser = {
+    username:'admin123',
+    email: 'admin@gmail.com',
+    password:process.env.ADMIN_PASSWORD,
+}
+
 const app = express();
 
 const storage = multer.diskStorage({
@@ -20,6 +27,7 @@ const storage = multer.diskStorage({
       cb(null,file.originalname);
     }
 })
+
 
 const upload = multer({storage:storage});
 
@@ -54,11 +62,19 @@ app.patch('/user/editUsername',editUsername);
 app.patch('/user/editPassword',editPassword);
 
 // PRODUCT ROUTES
-app.post('/product/add',upload.single('productThumbnail'),addProduct);
+app.post('/product/add',upload.single('productImg'),addProduct);
 app.get('/product/getAll',getAllProducts);
-app.put('/product/editProduct',upload.single('newProductThumbnail'),editProduct);
+app.put('/product/editProduct',upload.single('newProductImg'),editProduct);
 app.get('/product',getProductsByCategory);
 app.get('/product/:id',getProductById);
+app.delete('/product/deleteAll',deleteAllProducts);
+app.post('/product/delete',deleteProduct);
+
+// CATEGORY ROUTES
+app.post('/category/add',addCategory);
+app.get('/category/getAll',getAllCategories);
+app.post('/category/delete',deleteCategory);
+app.delete('/category/deleteAll',deleteAllCategories);
 
 app.listen(process.env.PORT,()=>{
     console.log(`server running at http://localhost:${process.env.PORT}`);
