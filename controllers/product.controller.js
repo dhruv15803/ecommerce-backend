@@ -83,6 +83,10 @@ const addProduct = async (req, res) => {
       product,
     });
   } catch (error) {
+    res.status(400).json({
+      "success":false,
+      "message":"something went wrong"
+    })
     console.log(error);
   }
 };
@@ -98,6 +102,7 @@ const editProduct = async (req, res) => {
       productId,
     } = req.body;
     const newProductThumbnail = req.file.path;
+    console.log(newProductThumbnail);
     const response = await cloudinary.uploader.upload(newProductThumbnail, {
       resource_type: "auto",
     });
@@ -127,8 +132,13 @@ const editProduct = async (req, res) => {
     res.json({
       success: true,
       message: "product successfully updated",
+
     });
   } catch (error) {
+    res.status(400).json({
+      "success":false,
+      "message":"something went wrong",
+    })
     console.log(error);
   }
 };

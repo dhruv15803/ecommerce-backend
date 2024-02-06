@@ -52,4 +52,18 @@ const deleteAllCategories = async (req, res) => {
   }
 };
 
-export { addCategory, getAllCategories, deleteCategory, deleteAllCategories };
+const getCategory = async (req,res)=>{
+try {
+  const {categoryId} = req.body;
+  const category = await Category.findOne({_id:categoryId});
+  res.json({
+    "success":true,
+    category,
+  })
+} catch (error) {
+  console.log(error);
+}
+}
+
+
+export { addCategory, getAllCategories, deleteCategory, deleteAllCategories,getCategory};

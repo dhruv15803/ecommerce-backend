@@ -7,7 +7,7 @@ import fs from 'fs';
 import multer from 'multer'
 import { addProduct, deleteAllProducts, deleteProduct, editProduct, getAllProducts, getProductById, getProductsByCategory } from './controllers/product.controller.js';
 import cors from 'cors'
-import { addCategory, deleteAllCategories, deleteCategory, getAllCategories} from './controllers/category.controllers.js';
+import { addCategory, deleteAllCategories, deleteCategory, getAllCategories, getCategory} from './controllers/category.controllers.js';
 dotenv.config({
     path:'./.env'
 })
@@ -75,7 +75,9 @@ app.post('/category/add',addCategory);
 app.get('/category/getAll',getAllCategories);
 app.post('/category/delete',deleteCategory);
 app.delete('/category/deleteAll',deleteAllCategories);
+app.post('/category/getCategory',getCategory);
 
 app.listen(process.env.PORT,()=>{
     console.log(`server running at http://localhost:${process.env.PORT}`);
 })
+
