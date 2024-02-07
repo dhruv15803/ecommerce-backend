@@ -8,6 +8,7 @@ import multer from 'multer'
 import { addProduct, deleteAllProducts, deleteProduct, editProduct, getAllProducts, getProductById, getProductsByCategory } from './controllers/product.controller.js';
 import cors from 'cors'
 import { addCategory, deleteAllCategories, deleteCategory, getAllCategories, getCategory} from './controllers/category.controllers.js';
+import { addToCart, clearCart, decrementQty, getUserCartItems, incrementQty } from './controllers/cart.controllers.js';
 dotenv.config({
     path:'./.env'
 })
@@ -65,7 +66,7 @@ app.patch('/user/editPassword',editPassword);
 app.post('/product/add',upload.single('productImg'),addProduct);
 app.get('/product/getAll',getAllProducts);
 app.put('/product/editProduct',upload.single('newProductImg'),editProduct);
-app.get('/product',getProductsByCategory);
+app.get('/product/:category',getProductsByCategory);
 app.get('/product/:id',getProductById);
 app.delete('/product/deleteAll',deleteAllProducts);
 app.post('/product/delete',deleteProduct);
@@ -76,6 +77,13 @@ app.get('/category/getAll',getAllCategories);
 app.post('/category/delete',deleteCategory);
 app.delete('/category/deleteAll',deleteAllCategories);
 app.post('/category/getCategory',getCategory);
+
+// Cart routes
+app.post('/cart/add',addToCart);
+app.get('/cart/getItems',getUserCartItems);
+app.delete('/cart/clear',clearCart);
+app.patch('/cart/increment',incrementQty);
+app.patch('/cart/decrement',decrementQty);
 
 app.listen(process.env.PORT,()=>{
     console.log(`server running at http://localhost:${process.env.PORT}`);

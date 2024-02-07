@@ -11,7 +11,7 @@ cloudinary.config({
 
 const getProductsByCategory = async (req, res) => {
   try {
-    const { category } = req.query;
+    const { category } = req.params;
     const categoryName = await Category.findOne({ categoryName: category });
     const products = await Product.find({ category: categoryName._id });
     res.json({
@@ -19,6 +19,10 @@ const getProductsByCategory = async (req, res) => {
       products,
     });
   } catch (error) {
+    res.status(500).json({
+      "success":false,
+      "message":"something went wrong"
+    })
     console.log(error);
   }
 };

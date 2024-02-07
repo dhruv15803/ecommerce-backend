@@ -60,6 +60,10 @@ try {
         })
         fs.unlinkSync(req.file.path);
 } catch (error) {
+    res.status(400).json({
+        "success":false,
+        "message":"something went wrong at the client-side",
+    })
     console.log('registering error ',error);   
 }
 }
