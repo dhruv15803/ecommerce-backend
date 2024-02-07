@@ -8,7 +8,7 @@ import multer from 'multer'
 import { addProduct, deleteAllProducts, deleteProduct, editProduct, getAllProducts, getProductById, getProductsByCategory } from './controllers/product.controller.js';
 import cors from 'cors'
 import { addCategory, deleteAllCategories, deleteCategory, getAllCategories, getCategory} from './controllers/category.controllers.js';
-import { addToCart, clearCart, decrementQty, getUserCartItems, incrementQty } from './controllers/cart.controllers.js';
+import { addToCart, clearCart, decrementQty, deleteCartItem, getTotalPrice, getUserCartItems, incrementQty } from './controllers/cart.controllers.js';
 dotenv.config({
     path:'./.env'
 })
@@ -84,6 +84,8 @@ app.get('/cart/getItems',getUserCartItems);
 app.delete('/cart/clear',clearCart);
 app.patch('/cart/increment',incrementQty);
 app.patch('/cart/decrement',decrementQty);
+app.post('/cart/delete',deleteCartItem);
+app.get('/cart/getTotalPrice',getTotalPrice);
 
 app.listen(process.env.PORT,()=>{
     console.log(`server running at http://localhost:${process.env.PORT}`);

@@ -7,7 +7,7 @@ dotenv.config({
 
 const addToCart = async (req, res) => {
   try {
-    const { cartItemTitle, cartItemDescription, cartItemPrice, cartProductId } =
+    const { cartItemTitle, cartItemDescription, cartItemPrice, cartProductId} =
       req.body;
     let { cartItemQty } = req.body;
     if (!req.cookies?.accessToken) {
@@ -124,6 +124,7 @@ const incrementQty = async (req,res) => {
   try {
     const { _id } = req.body;
     const cartItem = await Cart.findOne({ _id });
+    console.log(cartItem);
     if (!cartItem) {
       res.status(400).json({
         success: false,
@@ -164,4 +165,50 @@ const decrementQty = async (req,res) => {
     }
   };
 
-export { addToCart, getUserCartItems, clearCart ,incrementQty,decrementQty};
+
+  const deleteCartItem = async (req,res)=>{
+        try {
+            const {_id} = req.body;
+            await Cart.deleteOne({_id});
+            res.status(200).json({
+                "success":true,
+                "message":"successfully deleted cart item"
+            })
+        } catch (error) {
+            res.status(500).json({
+                "success":false,
+                "message":"something went wrong when deleting cart item"
+            })
+            console.log(error);
+        }
+  }
+
+
+
+  const getTotalPrice = async (req,res)=>{
+try {
+        if(!req.cookies?.accessToken){
+            res.status(400).json({
+                "success":false,
+                "message":"user not logged in"
+            })
+            return;
+        }
+        const decodedToken = jwt.verify(req.cookies?.accessToken,process.env.JWT_SECRET);
+        let sum = 0;
+        const items = await Cart.find({cartUser:decodedToken._id});
+        for(let i = 0 ;i<items.length;i++){
+            sum+=items[i].cartItemPrice * items[i].cartItemQty;
+        }
+        res.status(200).json({
+            "success":true,
+            "totalPrice":sum,
+        })
+} catch (error) {
+    console.log(error);
+}
+  }
+
+
+
+export { addToCart, getUserCartItems, clearCart ,incrementQty,decrementQty,deleteCartItem,getTotalPrice};
