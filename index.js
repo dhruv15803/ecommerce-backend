@@ -7,7 +7,7 @@ import fs from 'fs';
 import multer from 'multer'
 import { addProduct, deleteAllProducts, deleteProduct, editProduct, getAllProducts, getProductById, getProductsByCategory } from './controllers/product.controller.js';
 import cors from 'cors'
-import { addCategory, deleteAllCategories, deleteCategory, getAllCategories, getCategory} from './controllers/category.controllers.js';
+import { addCategory, addSubCategory, clearAllSubCategories, deleteAllCategories, deleteCategory, deleteSubCategory, getAllCategories, getCategory, getSubCategory} from './controllers/category.controllers.js';
 import { addToCart, clearCart, decrementQty, deleteCartItem, getTotalPrice, getUserCartItems, incrementQty } from './controllers/cart.controllers.js';
 dotenv.config({
     path:'./.env'
@@ -77,6 +77,10 @@ app.get('/category/getAll',getAllCategories);
 app.post('/category/delete',deleteCategory);
 app.delete('/category/deleteAll',deleteAllCategories);
 app.post('/category/getCategory',getCategory);
+app.post('/category/addSubCategory',addSubCategory);
+app.post('/category/getSubCategory',getSubCategory);
+app.post('/category/deleteSubCategory',deleteSubCategory);
+app.post('/category/clearAllSubCategories',clearAllSubCategories);
 
 // Cart routes
 app.post('/cart/add',addToCart);

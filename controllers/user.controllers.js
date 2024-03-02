@@ -163,8 +163,8 @@ const editAvatar = async (req,res)=>{
         })
         return;
     }
+    console.log(req.file);
     const decodedToken = jwt.verify(req.cookies.accessToken,process.env.JWT_SECRET);
-
     const response = await cloudinary.uploader.upload(req.file.path,{
         resource_type:"auto"
     })
@@ -202,6 +202,7 @@ try {
         const user = await User.updateOne({_id:decodedToken._id},{$set:{username:newUsername}});
         res.json({
             "success":true,
+            newUsername,
             "message":"username successfully updated",
         })
 } catch (error) {
@@ -231,5 +232,12 @@ try {
     console.log(error);
 }
 }
+
+
+
+
+
+
+
 
 export {registerUser,loginUser,getLoggedIn,logoutUser,editAvatar,editUsername,editPassword};
