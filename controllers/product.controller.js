@@ -119,6 +119,7 @@ const editProduct = async (req, res) => {
       newProductPrice,
       newProductStock,
       newProductCategory,
+      newProductSubCategory,
       productId,
     } = req.body;
     const newProductThumbnail = req.file.path;
@@ -129,12 +130,28 @@ const editProduct = async (req, res) => {
     const categoryName = await Category.findOne({
       categoryName: newProductCategory,
     });
+
+    const subCategoryName = await Category.findOne({categoryName:newProductCategory, 'subCategories.name':newProductSubCategory});
+
+    console.log(subCategoryName);
+
     if (!categoryName) {
       res.status(400).json({
         success: false,
         message: "please check if the category exists",
       });
     }
+
+    if(!subCategoryName) {
+      res.status(400).json({
+        "success":false,
+        "message":"please check if the sub category exists"
+      })
+    }
+
+    const subCategories = subCategoryName.subCategories;
+    const name = subCategories.find(item => item.name===newProductSubCategory);
+
     const newProduct = await Product.updateOne(
       { productId },
       {
@@ -145,6 +162,7 @@ const editProduct = async (req, res) => {
           productStock: newProductStock,
           category: categoryName._id,
           productImg: response.url,
+          subCategory:name.name,
         },
       }
     );
