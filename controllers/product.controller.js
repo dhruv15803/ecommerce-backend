@@ -1,7 +1,7 @@
 import { Product } from "../models/product.models.js";
 import { nanoid } from "nanoid";
 import { v2 as cloudinary } from "cloudinary";
-import { Category } from "../models/category.models.js";
+import { Category, SubCategory } from "../models/category.models.js";
 
 cloudinary.config({
   cloud_name: "dqcptinzd",
@@ -56,6 +56,7 @@ const addProduct = async (req, res) => {
       productPrice,
       productStock,
       productCategory,
+      productSubCategory,
     } = req.body;
     console.log(req.body);
     const productThumbnail = req.file;
@@ -66,12 +67,26 @@ const addProduct = async (req, res) => {
     const categoryName = await Category.findOne({
       categoryName: productCategory,
     });
+
+    const subCategoryName = await Category.findOne({categoryName:productCategory, 'subCategories.name':productSubCategory});
+    console.log(subCategoryName);
+
     if (!categoryName) {
       res.status(400).json({
         success: false,
         message: "please check if the category exists",
       });
     }
+    if(!subCategoryName){
+      res.status(400).json({
+        "success":false,
+        "message":"please check if the subCategory exists"
+      });
+    }
+
+    const subCategories = subCategoryName.subCategories;
+    const name = subCategories.find(item => item.name===productSubCategory);
+
     const product = await Product.create({
       productId: nanoid(),
       productTitle,
@@ -80,6 +95,7 @@ const addProduct = async (req, res) => {
       productStock,
       category: categoryName._id,
       productImg: response.url,
+      subCategory:name.name,
     });
     res.status(201).json({
       success: true,
