@@ -2,6 +2,7 @@ import { Product } from "../models/product.models.js";
 import { nanoid } from "nanoid";
 import { v2 as cloudinary } from "cloudinary";
 import { Category, SubCategory } from "../models/category.models.js";
+import fs from 'fs'
 
 cloudinary.config({
   cloud_name: "dqcptinzd",
@@ -77,15 +78,20 @@ const addProduct = async (req, res) => {
         message: "please check if the category exists",
       });
     }
-    if(!subCategoryName){
+    if(!subCategoryName && productSubCategory!==""){
       res.status(400).json({
         "success":false,
         "message":"please check if the subCategory exists"
       });
     }
 
-    const subCategories = subCategoryName.subCategories;
-    const name = subCategories.find(item => item.name===productSubCategory);
+
+    const subCategories = subCategoryName?.subCategories;
+    const name = subCategories?.find(item => item.name===productSubCategory);
+    let resultSubCategory = "";
+    if(subCategories!==null && productSubCategory!=="") {
+      resultSubCategory = name.name;
+    } 
 
     const product = await Product.create({
       productId: nanoid(),
@@ -95,13 +101,16 @@ const addProduct = async (req, res) => {
       productStock,
       category: categoryName._id,
       productImg: response.url,
-      subCategory:name.name,
+      subCategory:resultSubCategory,
     });
     res.status(201).json({
       success: true,
       message: "product added",
       product,
     });
+
+    fs.unlinkSync(req.file.path);
+
   } catch (error) {
     res.status(400).json({
       "success":false,
@@ -132,7 +141,6 @@ const editProduct = async (req, res) => {
     });
 
     const subCategoryName = await Category.findOne({categoryName:newProductCategory, 'subCategories.name':newProductSubCategory});
-
     console.log(subCategoryName);
 
     if (!categoryName) {
@@ -142,15 +150,20 @@ const editProduct = async (req, res) => {
       });
     }
 
-    if(!subCategoryName) {
+    if(!subCategoryName && newProductSubCategory!=="") {
       res.status(400).json({
         "success":false,
         "message":"please check if the sub category exists"
       })
     }
 
-    const subCategories = subCategoryName.subCategories;
-    const name = subCategories.find(item => item.name===newProductSubCategory);
+    const subCategories = subCategoryName?.subCategories;
+    const name = subCategories?.find(item => item.name===newProductSubCategory);
+
+    let resultSubCategory = "";
+    if(subCategories!==null && newProductSubCategory!==""){
+      resultSubCategory = name.name;
+    }
 
     const newProduct = await Product.updateOne(
       { productId },
@@ -162,7 +175,7 @@ const editProduct = async (req, res) => {
           productStock: newProductStock,
           category: categoryName._id,
           productImg: response.url,
-          subCategory:name.name,
+          subCategory:resultSubCategory,
         },
       }
     );
@@ -172,6 +185,9 @@ const editProduct = async (req, res) => {
       message: "product successfully updated",
 
     });
+
+    fs.unlinkSync(req.file.path);
+
   } catch (error) {
     res.status(400).json({
       "success":false,
