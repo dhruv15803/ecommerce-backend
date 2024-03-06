@@ -6,6 +6,9 @@ const cartSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
+    cartItemDescription:{
+        type:String,
+    },
     cartItemPrice: {
         type:Number,
         required:true,
@@ -22,6 +25,10 @@ const cartSchema = new mongoose.Schema({
     cartProductId: {
         type:mongoose.Schema.Types.ObjectId,
         ref:"Product",
+    },
+    cartItemImg: {
+        type:String,
+        required:true,
     }
 },{timestamps:true});
 

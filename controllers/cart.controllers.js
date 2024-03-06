@@ -7,9 +7,10 @@ dotenv.config({
 
 const addToCart = async (req, res) => {
   try {
-    const { cartItemTitle, cartItemDescription, cartItemPrice, cartProductId} =
+    const {cartItemTitle,cartItemDescription,cartItemPrice,cartProductId,cartItemImg} =
       req.body;
     let { cartItemQty } = req.body;
+    console.log(req.body);
     if (!req.cookies?.accessToken) {
       res.status(400).json({
         success: false,
@@ -49,6 +50,7 @@ const addToCart = async (req, res) => {
         cartItemPrice,
         cartItemQty,
         cartProductId,
+        cartItemImg,
         cartUser: decodedToken._id,
       });
       res.status(201).json({
@@ -183,8 +185,6 @@ const decrementQty = async (req,res) => {
         }
   }
 
-
-
   const getTotalPrice = async (req,res)=>{
 try {
         if(!req.cookies?.accessToken){
@@ -206,8 +206,8 @@ try {
         })
 } catch (error) {
     console.log(error);
-}
   }
+}
 
 
 

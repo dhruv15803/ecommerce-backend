@@ -67,7 +67,7 @@ app.post('/product/add',upload.single('productImg'),addProduct);
 app.get('/product/getAll',getAllProducts);
 app.put('/product/editProduct',upload.single('newProductImg'),editProduct);
 app.get('/product/:category',getProductsByCategory);
-app.get('/product/:id',getProductById);
+app.post('/product/getProductById',getProductById);
 app.delete('/product/deleteAll',deleteAllProducts);
 app.post('/product/delete',deleteProduct);
 
