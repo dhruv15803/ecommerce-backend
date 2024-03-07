@@ -5,7 +5,7 @@ import mongoose from 'mongoose'
 import { editAvatar, editPassword, editUsername, getLoggedIn, loginUser, logoutUser, registerUser } from './controllers/user.controllers.js';
 import fs from 'fs';
 import multer from 'multer'
-import { addProduct, deleteAllProducts, deleteProduct, editProduct, getAllProducts, getProductById, getProductsByCategory } from './controllers/product.controller.js';
+import { addProduct, deleteAllProducts, deleteProduct, editProduct, getAllProducts, getProductById, getProductsByCategory, getProductsByCategory2 } from './controllers/product.controller.js';
 import cors from 'cors'
 import { addCategory, addSubCategory, clearAllSubCategories, deleteAllCategories, deleteCategory, deleteSubCategory, getAllCategories, getCategory, getSubCategory} from './controllers/category.controllers.js';
 import { addToCart, clearCart, decrementQty, deleteCartItem, getTotalPrice, getUserCartItems, incrementQty } from './controllers/cart.controllers.js';
@@ -70,6 +70,7 @@ app.get('/product/:category',getProductsByCategory);
 app.post('/product/getProductById',getProductById);
 app.delete('/product/deleteAll',deleteAllProducts);
 app.post('/product/delete',deleteProduct);
+app.post('/product/getProductsByCategory',getProductsByCategory2);
 
 // CATEGORY ROUTES
 app.post('/category/add',addCategory);

@@ -28,6 +28,27 @@ const getProductsByCategory = async (req, res) => {
   }
 };
 
+const getProductsByCategory2 = async (req,res) => {
+try {
+    const {category} = req.body;
+    const categoryName = await Category.findOne({categoryName:category});
+    const products = await Product.find({category:categoryName._id});
+    res.json({
+      "success":true,
+      products,
+    })
+} catch (error) {
+  res.status(500).json({
+    "success":false,
+    "message":"something went wrong"
+  })
+  console.log(error);
+}
+
+
+
+}
+
 const getProductById = async (req, res) => {
   try {
     const {id} = req.body;
@@ -251,4 +272,5 @@ export {
   getProductById,
   deleteAllProducts,
   deleteProduct,
+  getProductsByCategory2,
 };
